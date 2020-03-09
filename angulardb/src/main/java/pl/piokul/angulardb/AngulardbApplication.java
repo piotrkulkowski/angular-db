@@ -15,7 +15,7 @@ public class AngulardbApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(AngulardbApplication.class, args);
-		System.out.println("Hello world :DDD");
+		System.out.println("Działam :DDD");
 	}
 
 }
