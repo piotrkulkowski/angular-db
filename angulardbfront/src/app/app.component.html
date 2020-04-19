@@ -1,0 +1,18 @@
+<html>
+  <p>Działam!</p>
+  <table multiTemplateDataRows mat-table matSort [dataSource]="dataSource">
+    <tr mat-header-row *matHeaderRowDef="keys.concat(['Guzik'])"></tr>
+    <tr mat-row *matRowDef="let element; columns: keys.concat(['Guzik']);"></tr>
+    <ng-container *ngFor="let item of keys" matColumnDef="{{item}}">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> {{item}} </th>
+        <td mat-cell *matCellDef="let element"> {{element[item]}} </td>
+    </ng-container>
+    <ng-container matColumnDef="Guzik">
+      <th mat-header-cell *matHeaderCellDef> Guzik</th>
+      <td mat-cell *matCellDef="let element"> <button mat-button>Guzik</button> </td>
+  </ng-container>
+  </table>
+  <div>
+    <mat-paginator [length]="100" [pageSize]="10" [pageSizeOptions]="[5, 10, 20]"></mat-paginator>
+  </div>
+</html>
