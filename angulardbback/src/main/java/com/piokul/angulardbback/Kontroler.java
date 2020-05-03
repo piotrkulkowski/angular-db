@@ -16,21 +16,54 @@ import java.util.Map;
 public class Kontroler {
 
     JdbcTemplate jdbc;
+    Connection con;
 
     @RequestMapping("/login")
-    public String login() {
+    public boolean login(@RequestBody String[] data) throws IllegalAccessException, InvocationTargetException, InstantiationException {
         try {
-            jdbc = new JdbcTemplate(DataSourceBuilder.create().driverClassName("oracle.jdbc.driver.OracleDriver").url("jdbc:oracle:thin:@//localhost:1521/praca").username("uzytkownik").password("haslo2").build());
-            jdbc.getDataSource().getConnection();
-            return "Zalogowano";
-        } catch(Exception ex) {
-            return ex.toString();
-        }
+            jdbc = new JdbcTemplate(DataSourceBuilder.create().driverClassName("oracle.jdbc.driver.OracleDriver").url("jdbc:oracle:thin:@//" + data[0]).username(data[1]).password(data[2]).build());
+            con = jdbc.getDataSource().getConnection();
+            while (con.isClosed()) {
+                Thread.sleep(500);
+            }
+            return true;
+        } catch(Exception ex) { }
+        return false;
     }
 
     @RequestMapping("/getTable")
-    public List<Map<String,Object>> getTable() {
-        return jdbc.queryForList("Select * from employees");
+    public List<Map<String,Object>> getTable(@RequestBody String tableName) {
+        return jdbc.queryForList("Select * from " + tableName);
+    }
+
+    @RequestMapping("/edit")
+    public void edit(@RequestBody String dane) {
+        jdbc.execute(dane);
+        jdbc.execute("commit");
+    }
+
+    @RequestMapping("/logout")
+    public void logout() throws SQLException {
+        con.close();
+        jdbc = null;
+    }
+
+    @RequestMapping("/getPrimaryKey")
+    public List<String> getPrimaryKey (@RequestBody String tableName) {
+        String sql = "SELECT column_name FROM all_cons_columns WHERE constraint_name = (\n" +
+                "  SELECT constraint_name FROM all_constraints \n" +
+                "  WHERE UPPER(table_name) = UPPER('Employees') AND CONSTRAINT_TYPE = 'P'\n" +
+                ")";
+        System.out.println(sql);
+        RowMapper rowMapper = (ResultSet rs, int rowNum) -> rs.getString(1);
+        return jdbc.query(sql,rowMapper);
+    }
+
+    @RequestMapping("/getTableNames")
+    public List<String> getTableNames() {
+        String sql = "SELECT table_name FROM all_tables where owner = (select uzytkownik from dual)";
+        RowMapper rowMapper = (ResultSet rs, int rowNum) -> rs.getString(1);
+        return jdbc.query(sql,rowMapper);
     }
 
 }
