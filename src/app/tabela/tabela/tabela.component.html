@@ -1,0 +1,21 @@
+<table multiTemplateDataRows mat-table matSort [dataSource]="dataSource" style="margin-left: 16px">
+  <tr mat-header-row *matHeaderRowDef="kolumny.concat(['Guzik'])"></tr>
+  <tr mat-row *matRowDef="let element; columns: kolumny.concat(['Guzik']);"></tr>
+  <ng-container *ngFor="let kolumna of kolumny" matColumnDef="{{kolumna}}">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header style="padding-right: 12px"> {{kolumna}} </th>
+    <td mat-cell *matCellDef="let element" style="padding-right: 12px"> {{element[kolumna]}} </td>
+  </ng-container>
+  <ng-container matColumnDef="Guzik">
+    <th mat-header-cell *matHeaderCellDef></th>
+    <td mat-cell *matCellDef="let element; let i = index">
+      <button mat-stroked-button (click)="openDialog(dataSource.filteredData.indexOf(element))" color=primary>Edytuj</button>
+    </td>
+  </ng-container>
+</table>
+<div>
+  <button mat-raised-button (click)="nowaKrotka()" class="guzik" style="margin-left: 16px; margin-top: 16px">Nowa krotka</button>
+</div>
+<div>
+  <mat-paginator [length]="100" [pageSize]="5" [pageSizeOptions]="[5, 10, 20]" style="float: left; margin-left: 4px"></mat-paginator>
+  <br><br><br>
+</div>
