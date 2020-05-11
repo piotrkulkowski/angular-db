@@ -1,0 +1,9 @@
+{
+    "version": 3,
+    "mappings": "AAGA,AAAA,UAAU,CAAC;EACP,IAAI,EAAE,IAAI,CAJE,SAAS,EAAE,UAAU;EAKjC,KAAK,EAJO,IAAI;EAKhB,UAAU,EAAE,MAAM;EAClB,OAAO,EAAE,IAAI;CAAG;;AAEpB,AAAA,eAAe,CAAC;EACZ,KAAK,EAAE,KAAK;CAAG;;AAEnB,AAAA,MAAM,CAAC;EACH,KAAK,EAAE,KAAK;CAAG",
+    "sources": [
+        "logowanie.component.sass"
+    ],
+    "names": [],
+    "file": "logowanie.component.css"
+}

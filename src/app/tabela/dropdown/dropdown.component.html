@@ -1,0 +1,13 @@
+<div>
+  <button mat-raised-button (click)="wyloguj()" class="guzik" style="float: left; margin-left: 16px; margin-top: 12px">Wyloguj</button>
+  <mat-form-field>
+    <mat-label>Tabela</mat-label>
+    <mat-select [(ngModel)]="wybrana">  
+      <mat-option *ngFor="let nazwa of nazwyTabel" [value]="nazwa" >
+        {{nazwa}}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <button mat-raised-button (click)="wybr()" class="guzik" style="margin-left: 16px">Wybierz</button>
+</div>
+<app-tabela *ngIf="loadComponent" [tabela]="wybrana"></app-tabela>

@@ -1,0 +1,13 @@
+<div mat-dialog-content>
+  <ng-container *ngFor="let pozycja of singleArray">
+    <mat-form-field appearance="outline">
+      <mat-label>{{pozycja.kolumny}}</mat-label>
+        <input matInput [(ngModel)]="pozycja.dane">
+    </mat-form-field>
+  </ng-container> 
+</div>
+<div mat-dialog-actions>
+  <button mat-raised-button (click)="zatwierdz()" [mat-dialog-close]="tempArray" class="guzik" style="width: 204px; margin-bottom: 16px">Zatwierdź</button>
+  <button mat-stroked-button [mat-dialog-close] color="primary" style="margin-bottom: 8px; margin-left: 0px; width: 48%">Anuluj</button>
+  <button mat-raised-button [mat-dialog-close]="usun" color="warn" style="margin-bottom: 8px; margin-right: 0px; width: 48%">Usuń</button>
+</div>
