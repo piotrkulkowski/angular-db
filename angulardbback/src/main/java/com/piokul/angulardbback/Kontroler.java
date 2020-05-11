@@ -5,8 +5,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.web.bind.annotation.*;
 
-import javax.sql.DataSource;
-import java.lang.reflect.InvocationTargetException;
 import java.sql.*;
 import java.util.List;
 import java.util.Map;
@@ -18,13 +16,23 @@ public class Kontroler {
     JdbcTemplate jdbc;
     Connection con;
 
+    @RequestMapping("/isOpen")
+    public boolean isOpen() throws SQLException {
+        if (con != null) {
+            if (!con.isClosed()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     @RequestMapping("/login")
-    public boolean login(@RequestBody String[] data) throws IllegalAccessException, InvocationTargetException, InstantiationException {
+    public boolean login(@RequestBody String[] data) {
         try {
             jdbc = new JdbcTemplate(DataSourceBuilder.create().driverClassName("oracle.jdbc.driver.OracleDriver").url("jdbc:oracle:thin:@//" + data[0]).username(data[1]).password(data[2]).build());
             con = jdbc.getDataSource().getConnection();
             while (con.isClosed()) {
-                Thread.sleep(500);
+                Thread.sleep(300);
             }
             return true;
         } catch(Exception ex) { }
@@ -38,6 +46,7 @@ public class Kontroler {
 
     @RequestMapping("/edit")
     public void edit(@RequestBody String dane) {
+        System.out.println(dane);
         jdbc.execute(dane);
         jdbc.execute("commit");
     }
@@ -52,7 +61,7 @@ public class Kontroler {
     public List<String> getPrimaryKey (@RequestBody String tableName) {
         String sql = "SELECT column_name FROM all_cons_columns WHERE constraint_name = (\n" +
                 "  SELECT constraint_name FROM all_constraints \n" +
-                "  WHERE UPPER(table_name) = UPPER('Employees') AND CONSTRAINT_TYPE = 'P'\n" +
+                "  WHERE UPPER(table_name) = UPPER('" + tableName + "') AND CONSTRAINT_TYPE = 'P'\n" +
                 ")";
         System.out.println(sql);
         RowMapper rowMapper = (ResultSet rs, int rowNum) -> rs.getString(1);
@@ -61,7 +70,7 @@ public class Kontroler {
 
     @RequestMapping("/getTableNames")
     public List<String> getTableNames() {
-        String sql = "SELECT table_name FROM all_tables where owner = (select uzytkownik from dual)";
+        String sql = "SELECT table_name FROM all_tables where owner = (select 'UZYTKOWNIK' from dual)";
         RowMapper rowMapper = (ResultSet rs, int rowNum) -> rs.getString(1);
         return jdbc.query(sql,rowMapper);
     }
